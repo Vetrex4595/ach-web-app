@@ -1,0 +1,8 @@
+applications:
+- name: connect-pay-demo
+  memory: 1G
+  instances: 1  
+  path: ./target/ach.pwmb.web.client-0.0.1-SNAPSHOT.jar
+  env:
+    spring.profiles.active: cloud
+ 
