@@ -74,10 +74,12 @@ public class TCKValidationController {
 			headers.set(HmacConstants.TIMESTAMP, map.get(HmacConstants.TIMESTAMP));
 			
 			
-			HttpEntity<EstablishRequest> entity = new HttpEntity<EstablishRequest>(establishRequest, headers);
+			HttpEntity<String> entity = new HttpEntity<String>(payload, headers);
 			
 			
-			EstablishResponse response = restTemplate.postForObject(url, entity, EstablishResponse.class);
+			String resp = restTemplate.postForObject(url, entity, String.class);
+			
+			EstablishResponse response = JsonUtil.fromJson(resp, EstablishResponse.class);
 			
 
 			return new ResponseEntity<>(response, HttpStatus.OK);
@@ -134,22 +136,12 @@ public class TCKValidationController {
 			headers.set(HmacConstants.TIMESTAMP, map.get(HmacConstants.TIMESTAMP));
 			
 			
-			HttpEntity<ValidateRequest> entity = new HttpEntity<ValidateRequest>(validateRequest, headers);
+			HttpEntity<String> entity = new HttpEntity<String>(payload, headers);
 			
 			
-			ValidateResponse response = restTemplate.postForObject(url, entity, ValidateResponse.class);
+			String resp = restTemplate.postForObject(url, entity, String.class);
 			
-			/**
-			TokenResponse tr = null;
-			try {
-				tr = enroll(response);
-				response.setEnrollmentId(tr.getEnrollmentId());
-				
-			} catch (Exception e) {
-				System.out.println("Enrollment call failed: " + e.getMessage());
-				e.printStackTrace();
-			}
-			**/
+			ValidateResponse response = JsonUtil.fromJson(resp, ValidateResponse.class);
 			
 
 			return new ResponseEntity<>(response, HttpStatus.OK);
@@ -229,10 +221,12 @@ public class TCKValidationController {
 		headers.set(HmacConstants.NONCE, map.get(HmacConstants.NONCE));
 		headers.set(HmacConstants.TIMESTAMP, map.get(HmacConstants.TIMESTAMP));
 		
-		HttpEntity<TokenRequest> entity = new HttpEntity<TokenRequest>(tr, headers);
+		HttpEntity<String> entity = new HttpEntity<String>(payload, headers);
 		
 		
-		TokenResponse response = restTemplate.postForObject(url, entity, TokenResponse.class);
+		String resp = restTemplate.postForObject(url, entity, String.class);
+		 
+		TokenResponse response = JsonUtil.fromJson(resp, TokenResponse.class);
 		
 		return response;
 		
@@ -348,7 +342,7 @@ public class TCKValidationController {
 			headers.set(HmacConstants.TIMESTAMP, map.get(HmacConstants.TIMESTAMP));
 			
 			
-			HttpEntity<ValidateRequest> entity = new HttpEntity<ValidateRequest>(validateRequest, headers);
+			HttpEntity<String> entity = new HttpEntity<String>(payload, headers);
 			
 			
 			String response = restTemplate.postForObject(url, entity, String.class);

@@ -1,5 +1,7 @@
 package com.firstdata.ach.pwmb.web.client;
 
+import java.util.List;
+
 import javax.net.ssl.SSLContext;
 
 import org.apache.http.HttpHost;
@@ -12,7 +14,18 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
+import org.springframework.http.converter.FormHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.ResourceHttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter;
+import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter;
+import org.springframework.http.converter.xml.SourceHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+
+import com.google.common.collect.ImmutableList;
 
 @SpringBootApplication
 public class Application {
@@ -26,7 +39,7 @@ public class Application {
 
 	@Bean
 	public RestTemplate restTemplate() {
-		RestTemplate t = new RestTemplate();
+		RestTemplate t = new RestTemplate(converterList());
 
 		System.out.println("Use proxy is: " + true);
 		String json = System.getenv("VCAP_APPLICATION");
@@ -67,5 +80,65 @@ public class Application {
 
 		return t;
 	}
+	
+	
+
+	@SuppressWarnings("unchecked")
+	private List<HttpMessageConverter<?>> converterList() {
+		return ImmutableList.<HttpMessageConverter<?>>of(
+				formHttpMessageConverter(),
+				byteArrayHttpMessageConverter(),
+				stringHttpMessageConverter(),
+				resourceHttpMessageConverter(),
+				sourceHttpMessageConverter(),
+				allEncompassingFormHttpMessageConverter(),
+				jaxb2RootElementHttpMessageConverter(),
+				mappingJackson2HttpMessageConverter()
+		);
+	}
+
+	@Bean
+	public SourceHttpMessageConverter sourceHttpMessageConverter() {
+		return new SourceHttpMessageConverter();
+	}
+	
+	@Bean
+	public FormHttpMessageConverter formHttpMessageConverter() {
+		return new FormHttpMessageConverter();
+	}
+
+	@Bean
+	public AllEncompassingFormHttpMessageConverter allEncompassingFormHttpMessageConverter() {
+		return new AllEncompassingFormHttpMessageConverter();
+	}
+
+	@Bean
+	public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
+		return new MappingJackson2HttpMessageConverter();
+	}
+
+	@Bean
+	public StringHttpMessageConverter stringHttpMessageConverter() {
+		StringHttpMessageConverter c = new StringHttpMessageConverter();
+		c.setWriteAcceptCharset(false);
+		return c;
+	}
+
+	@Bean
+	public Jaxb2RootElementHttpMessageConverter jaxb2RootElementHttpMessageConverter() {
+		return new Jaxb2RootElementHttpMessageConverter();
+	}
+
+	@Bean
+	public ByteArrayHttpMessageConverter byteArrayHttpMessageConverter() {
+		return new ByteArrayHttpMessageConverter();
+	}
+
+	@Bean
+	ResourceHttpMessageConverter resourceHttpMessageConverter() {
+		return new ResourceHttpMessageConverter();
+	}
+	
+	
 
 }

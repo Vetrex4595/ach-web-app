@@ -12,7 +12,25 @@
 	</script>
 	
 	
+	<%
+	
+		String profile = System.getProperty("spring.profiles.active");
+		if (profile != null && profile.equals("prod")) {
+	
+	%>
+	
+	<script type="text/javascript" src="https://paywithmybank.com/start/scripts/pwmb/pwmb.js?accessId=RqBNyqzgTVGhmvyV74NM"></script>
+	
+	<% } else { %>
+	
 	<script type="text/javascript" src="https://sandbox.paywithmybank.com/start/scripts/pwmb/pwmb.js?accessId=RqBNyqzgTVGhmvyV74NM"></script>
+	
+	<% } %>
+	
+	
+	
+	
+	
 	<script type="text/javascript" src="<%= request.getAttribute("name") %>/TCKValidationInterface.js"></script>	
 
 <script type='text/javascript'>
